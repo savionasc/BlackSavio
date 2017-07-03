@@ -35,10 +35,10 @@ public class Principal extends javax.swing.JFrame {
         //System.out.println("Player "+vez);
         player.setText(player.getText()+vez);
         
-        Carta c1 = (Carta) ois.readObject();
+        /*Carta c1 = (Carta) ois.readObject();
         Carta c2 = (Carta) ois.readObject();
         carta1.setText(carta1.getText()+c1.getNumero());
-        carta2.setText(carta2.getText()+c2.getNumero());
+        carta2.setText(carta2.getText()+c2.getNumero());*/
     }
 
     /**
