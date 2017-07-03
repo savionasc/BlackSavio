@@ -1,9 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package blacksavio;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -11,11 +13,32 @@ package blacksavio;
  */
 public class Principal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Principal
-     */
-    public Principal() {
+    Socket socket1;
+    int portNumber = 1777;
+    String str;
+    ObjectInputStream ois = null;
+    ObjectOutputStream oos = null;
+
+    public Principal() throws Exception {
         initComponents();
+
+        try {//InetAddress.getLocalHost()
+            socket1 = new Socket(InetAddress.getLoopbackAddress(), portNumber);
+            ois = new ObjectInputStream(socket1.getInputStream());
+            oos = new ObjectOutputStream(socket1.getOutputStream());
+        } catch (Exception ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //Recebendo o numero do player (1 ou 2)
+        String vez = (String) ois.readObject();
+        //System.out.println("Player "+vez);
+        player.setText(player.getText()+vez);
+        
+        Carta c1 = (Carta) ois.readObject();
+        Carta c2 = (Carta) ois.readObject();
+        carta1.setText(carta1.getText()+c1.getNumero());
+        carta2.setText(carta2.getText()+c2.getNumero());
     }
 
     /**
@@ -29,6 +52,8 @@ public class Principal extends javax.swing.JFrame {
 
         carta1 = new javax.swing.JLabel();
         carta2 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        player = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -36,29 +61,55 @@ public class Principal extends javax.swing.JFrame {
 
         carta2.setText("Carta 2: ");
 
+        jButton3.setText("Receber Cartas");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        player.setText("Player ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(40, 40, 40)
                 .addComponent(carta1)
-                .addGap(58, 58, 58)
+                .addGap(66, 66, 66)
                 .addComponent(carta2)
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(71, 71, 71))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(player)
+                        .addGap(43, 43, 43))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(79, 79, 79)
+                .addGap(25, 25, 25)
+                .addComponent(player)
+                .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(carta1)
-                    .addComponent(carta2))
-                .addContainerGap(207, Short.MAX_VALUE))
+                    .addComponent(carta2)
+                    .addComponent(carta1))
+                .addGap(79, 79, 79)
+                .addComponent(jButton3)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -91,7 +142,11 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                try {
+                    new Principal().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -99,5 +154,7 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel carta1;
     private javax.swing.JLabel carta2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel player;
     // End of variables declaration//GEN-END:variables
 }
