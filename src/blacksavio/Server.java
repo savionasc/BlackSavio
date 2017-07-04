@@ -2,6 +2,7 @@ package blacksavio;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,9 +12,7 @@ import java.util.List;
 public class Server {
     public static void main(String[] args) throws Exception {
         ServerSocket servidor;
-        Socket cliente;
         int cTosPortNumber = 1777;
-        
         //Esperando o primeiro cliente
         servidor = new ServerSocket(cTosPortNumber);
         System.out.println("Esperando o primeiro player pela porta " + cTosPortNumber);
@@ -30,19 +29,19 @@ public class Server {
             Carta c = new Carta(gerador.nextInt(13), gerador.nextInt(4));
             oos.writeObject(c);
         }*/
-        List<Thread> clientes;
-        int i = 0;
-        while(i < 2){
-        cliente = servidor.accept();
-        Jogo tratamento = new Jogo(cliente);
-
+        List<Thread> clientes = new ArrayList<>();
+        int i = 1;
+        //Sala
+        while(true){
+            Socket cliente1 = servidor.accept();
+            Socket cliente2 = servidor.accept();
+            Jogo tratamento = new Jogo(cliente1, cliente2, i);
             // cria a thread em cima deste objeto
             Thread t = new Thread(tratamento);
 
             // inicia a thread
             t.start();
-            clientes.add(t);
-            i++;            
+            i += 2;            
         }
     }
 }
