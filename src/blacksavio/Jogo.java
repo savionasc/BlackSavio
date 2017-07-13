@@ -12,6 +12,79 @@ import java.util.logging.Logger;
 public class Jogo implements Runnable{
     int soma1 = 0, soma2 = 0;
     int etapa = 0;
+    int valores1 = 0, valores2 = 0;
+    
+    class EscutarPerdeu implements Runnable{
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
+        Socket s;
+        public EscutarPerdeu(ObjectOutputStream oos1, ObjectInputStream ois1, Socket cliente) {
+            this.oos = oos1;
+            this.ois = ois1;
+            this.s = cliente;
+        }
+
+        @Override
+        public void run() {
+            try {
+                if((int) ois.readObject() <= 0){
+                    oos.writeObject("Você perdeu!!");
+                    System.out.println("Pass2");
+                }else{
+                    oos.writeObject("Você ganhou!!");
+                    System.out.println("Pass2");
+                }
+                
+                s.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+    class RetornarValores implements Runnable{
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
+        int valor;
+        public RetornarValores(ObjectOutputStream oos1, ObjectInputStream ois1, int player, int ganhador, int valor) {
+            this.oos = oos1;
+            this.ois = ois1;
+            this.valor = valor;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                oos.writeObject(valor);
+            } catch (Exception e) {
+            }
+        }
+    
+    }
+    class ReceberValores implements Runnable{
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
+        public ReceberValores(ObjectOutputStream oos1, ObjectInputStream ois1) {
+            this.oos = oos1;
+            this.ois = ois1;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                if(ois.readObject().toString().equals("Valores")){
+                    int play = (int) ois.readObject();
+                    if((play%2) == 1){
+                        valores1 = (int) ois.readObject();
+                    }else{
+                        valores2 = (int) ois.readObject();
+                    }
+                    etapa++;
+                }                
+            } catch (Exception e) {
+            }
+        }
+    
+    }
+    
     class ReceberResposta implements Runnable{
         ObjectOutputStream oos;
         ObjectInputStream ois;
@@ -99,12 +172,26 @@ public class Jogo implements Runnable{
             oos1.writeObject(player);
             oos1.writeObject("5000");
             List<Carta> cartas1 = new ArrayList<>();
-            
+
             oos2 = new ObjectOutputStream(Client2.getOutputStream());
             ois2 = new ObjectInputStream(Client2.getInputStream());                
             oos2.writeObject(player+1);
             oos2.writeObject("5000");
             List<Carta> cartas2 = new ArrayList<>();
+
+            Thread tReceberValores1 = new Thread(new ReceberValores(oos1, ois1));
+            tReceberValores1.start();
+            Thread tReceberValores2 = new Thread(new ReceberValores(oos2, ois2));
+            tReceberValores2.start();
+            while (etapa < 2) {
+                System.out.println("x: "+valores1+" y: "+valores2);
+            }
+
+            Thread tPassarCartas1 = new Thread(new PassarCartas(oos1, ois1));
+            tPassarCartas1.start();
+            Thread tPassarCartas2 = new Thread(new PassarCartas(oos2, ois2));
+            tPassarCartas2.start();
+
             /*
             if(ois1.readObject().toString().equals("cards")){
                 Random gerador = new Random();
@@ -125,11 +212,7 @@ public class Jogo implements Runnable{
                     cartas2.add(c);
                 }
             }*/
-            Thread tPassarCartas1 = new Thread(new PassarCartas(oos1, ois1));
-            tPassarCartas1.start();
-            Thread tPassarCartas2 = new Thread(new PassarCartas(oos2, ois2));
-            tPassarCartas2.start();
-            while (etapa < 2){
+            while (etapa < 4){
                 System.out.println("a"+etapa);
             }
             System.out.println("Etapa 2");
@@ -151,12 +234,35 @@ public class Jogo implements Runnable{
             oos1.writeObject(""+soma2);
             oos2.writeObject(""+soma1);
             if(soma1 > soma2){
-                System.out.println("O ganhador foi o player 1 com "+soma1+" pontos");
+                System.out.println("O ganhador foi o player 1 com "+soma1+" pontos e valor: "+(valores1+valores2));
+                oos1.writeObject((valores1+valores2));
+                oos2.writeObject(0);
+                etapa++;
             }else if(soma2 > soma1){
-                System.out.println("O ganhador foi o player 2 com "+soma2+" pontos");
+                System.out.println("O ganhador foi o player 2 com "+soma2+" pontos e valor: "+(valores1+valores2));
+                oos2.writeObject((valores1+valores2));
+                oos1.writeObject(0);
+                etapa++;
             }else{
                 System.err.println("Empate!!");
+                oos2.writeObject(valores2);
+                oos1.writeObject(valores1);
+                etapa++;
             }
+            while (etapa < 3){
+                System.out.println("a"+etapa);
+            }
+            System.out.println("Etapa 2");
+            System.out.println("Etapa 2");
+            System.out.println("Etapa 2");
+            Thread tEscutarPerdeu1 = new Thread(new EscutarPerdeu(oos1, ois1, Client1));
+            tEscutarPerdeu1.start();
+            Thread tEscutarPerdeu2 = new Thread(new EscutarPerdeu(oos2, ois2, Client2));
+            tEscutarPerdeu2.start();
+            System.out.println("Etapa 2");
+            System.out.println("Etapa 2");
+            System.out.println("Etapa 2");
+            System.out.println("Etapa 2");
             
         } catch (Exception ex) {
             Logger.getLogger(Jogo.class.getName()).log(Level.SEVERE, null, ex);

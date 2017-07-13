@@ -36,6 +36,7 @@ public class Tela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Bem vindo");
 
         jButton1.setText("Cliente");
@@ -61,26 +62,27 @@ public class Tela extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addComponent(jButton1)
-                        .addGap(89, 89, 89)
+                        .addGap(58, 58, 58)
                         .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
+                        .addGap(116, 116, 116)
                         .addComponent(jLabel1)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(34, 34, 34)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
