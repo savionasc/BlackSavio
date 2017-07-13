@@ -69,7 +69,7 @@ public class Principal extends javax.swing.JFrame {
                 carta2.setText(carta2.getText()+c2.getNumero());
                 soma = c1.getNumero()+c2.getNumero();
                 Soma.setText("Soma: " + soma );
-                jButton3.setText("Puxar outra Carta");
+                jButton3.setText("Fim");
             } catch (Exception ex) {
                 Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -337,7 +337,7 @@ public class Principal extends javax.swing.JFrame {
                 player.setText(player.getText()+play);
                 pontos.setText((String) ois.readObject());
 
-                jButton3.setText("Aguardando jogador...");
+                jButton3.setText("Pedir cartas");
                 partida++;
         }else if(partida == 1){
             Thread t = new Thread(new lerCartas());
@@ -362,6 +362,7 @@ public class Principal extends javax.swing.JFrame {
         }*/
         Thread t = new Thread(new Valores(valores));
         t.start();
+        JOptionPane.showMessageDialog(rootPane, "Valor apostado");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
