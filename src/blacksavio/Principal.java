@@ -92,13 +92,13 @@ public class Principal extends javax.swing.JFrame {
     int partida = 0;
     
     Socket socket1;
-    int portNumber = 1777;
     String str;
     ObjectInputStream ois = null;
     ObjectOutputStream oos = null;
 
     public Principal() throws Exception {
         initComponents();
+        porta = Integer.parseInt(JOptionPane.showInputDialog("Digite a porta:"));
     }
 
     /**
@@ -327,7 +327,7 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {//InetAddress.getLocalHost()
             if(partida == 0){
-                socket1 = new Socket(InetAddress.getLoopbackAddress(), portNumber);
+                socket1 = new Socket(InetAddress.getLoopbackAddress(), porta);
                 ois = new ObjectInputStream(socket1.getInputStream());
                 oos = new ObjectOutputStream(socket1.getOutputStream());
                 JOptionPane.showMessageDialog(rootPane, "Conectado? "+socket1.isConnected());
