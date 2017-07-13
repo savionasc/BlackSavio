@@ -50,7 +50,7 @@ public class Jogo implements Runnable{
                 if(ois.readObject().toString().equals("cards")){
                     Random gerador = new Random();
                     for (int i = 0; i < 2; i++) {
-                        Carta c = new Carta(gerador.nextInt(13), gerador.nextInt(4));
+                        Carta c = new Carta(gerador.nextInt(13)+1, gerador.nextInt(4));
                         oos.writeObject(c);
                     }
                     System.out.println("Etapa");
